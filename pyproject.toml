@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "patternmem-rag"
+version = "0.1.0"
+description = "Framework-agnostic RAG middleware that makes any pipeline self-improving via persistent failure-pattern memory."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "PatternMem Contributors" }]
+keywords = ["rag", "llm", "memory", "retrieval-augmented-generation", "self-improving"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "sentence-transformers>=2.7",
+    "numpy>=1.24",
+    "aiosqlite>=0.19",
+]
+
+[project.optional-dependencies]
+ragas    = ["ragas>=0.1"]
+deepeval = ["deepeval>=0.20"]
+neo4j    = ["neo4j>=5.0"]
+langfuse = ["langfuse>=2.0"]
+langchain = ["langchain>=0.1"]
+networkx = ["networkx>=3.0"]
+# Celery: documented stub — community contribution; not built in core
+celery   = ["celery>=5.3"]
+dev = [
+    "pytest>=7.4",
+    "pytest-asyncio>=0.23",
+    "hypothesis>=6.80",
+    "mypy>=1.8",
+    "networkx>=3.0",
+    "types-aiofiles",
+]
+all = [
+    "patternmem-rag[ragas,deepeval,neo4j,langfuse,langchain,networkx]",
+]
+
+[project.urls]
+Homepage    = "https://github.com/patternmem/patternmem-rag"
+Repository  = "https://github.com/patternmem/patternmem-rag"
+Issues      = "https://github.com/patternmem/patternmem-rag/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["patternmem*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths    = ["tests"]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+ignore_missing_imports = true
