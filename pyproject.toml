@@ -49,9 +49,9 @@ all = [
 ]
 
 [project.urls]
-Homepage    = "https://github.com/patternmem/patternmem-rag"
-Repository  = "https://github.com/patternmem/patternmem-rag"
-Issues      = "https://github.com/patternmem/patternmem-rag/issues"
+Homepage    = "https://github.com/nk-gujjar/patternmem-rag"
+Repository  = "https://github.com/nk-gujjar/patternmem-rag"
+Issues      = "https://github.com/nk-gujjar/patternmem-rag/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
