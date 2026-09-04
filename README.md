@@ -1,6 +1,11 @@
 # PatternMem RAG
 
-> Framework-agnostic Python middleware that wraps *any* existing RAG pipeline and makes it **self-improving** — via persistent failure-pattern memory across queries.
+[![CI](https://github.com/nk-gujjar/patternmem-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/nk-gujjar/patternmem-rag/actions)
+[![PyPI version](https://img.shields.io/pypi/v/patternmem-rag.svg)](https://pypi.org/project/patternmem-rag/)
+[![Python](https://img.shields.io/pypi/pyversions/patternmem-rag.svg)](https://pypi.org/project/patternmem-rag/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> **Framework-agnostic Python middleware that wraps *any* existing RAG pipeline and makes it self-improving** — via persistent failure-pattern memory across queries.
 
 ```python
 # Before
@@ -10,9 +15,11 @@ answer = my_rag_pipeline(query)
 answer = await PatternMemMiddleware(pipeline=my_rag_pipeline).ainvoke(query)
 ```
 
+---
+
 ## Why PatternMem?
 
-Self-RAG, CRAG, and DSPy all reflect *within a single query*. PatternMem is the missing layer: it makes failure signals **persistent across the query history** — so the second time a pipeline fails on a similar question, it already knows what went wrong and pre-empts the failure.
+Self-RAG, CRAG, and DSPy all reflect *within a single query*. PatternMem is the missing layer: it makes failure signals **persistent across the entire query history** — so the second time a pipeline fails on a similar question, it already knows what went wrong and pre-empts the failure.
 
 PatternMem **does not reimplement** evaluation, LLM calling, or graph storage. It sits between your pipeline and the eval/storage libraries you already have.
 
@@ -158,6 +165,15 @@ Only Phase 3 (root cause extraction and hint generation from a `FailureSignal`).
 
 **Q: What's out of scope?**
 Celery integration (documented stub), Redis/Postgres backends (open ABC for community), any dashboard (use Langfuse's native UI).
+
+---
+
+## Contributing
+
+Contributions are welcome! Please open an issue first to discuss what you'd like to change.
+
+- All backends must pass the contract test suite in `tests/contract/test_backend_contract.py`.
+- Keep public API surface stable — anything not in `patternmem.__init__.__all__` is internal.
 
 ---
 

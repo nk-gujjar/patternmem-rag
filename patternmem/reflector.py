@@ -65,7 +65,7 @@ class BackgroundReflector:
         self._backend = backend
         self._llm = llm
         self._emitter = emitter
-        self._queue: asyncio.Queue[Any] = asyncio.Queue()
+        self._queue: asyncio.Queue[Any] = asyncio.Queue(maxsize=1000)
         self._task: asyncio.Task[None] | None = None
 
     # ------------------------------------------------------------------

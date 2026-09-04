@@ -108,8 +108,9 @@ async def main() -> None:
 
     pipeline = MockRAGPipeline()
 
-    # Use a temp path for the demo so it doesn't pollute ~/.patternmem
-    demo_store = Path("/tmp/patternmem_demo_patterns.json")
+    import tempfile
+    # Use the system temp dir for cross-platform compatibility (Linux/macOS/Windows)
+    demo_store = Path(tempfile.gettempdir()) / "patternmem_demo_patterns.json"
     demo_store.unlink(missing_ok=True)  # clean start
 
     backend = JSONBackend(
