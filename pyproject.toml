@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "patternmem-rag"
-version = "0.1.0"
+version = "0.1.1"
 description = "Framework-agnostic RAG middleware that makes any pipeline self-improving via persistent failure-pattern memory."
 readme = "README.md"
 license = "MIT"
