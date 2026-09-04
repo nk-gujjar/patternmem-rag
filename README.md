@@ -1,8 +1,8 @@
 # PatternMem RAG
 
 [![CI](https://github.com/nk-gujjar/patternmem-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/nk-gujjar/patternmem-rag/actions)
-[![PyPI version](https://img.shields.io/pypi/v/patternmem-rag.svg)](https://pypi.org/project/patternmem-rag/)
-[![Python](https://img.shields.io/pypi/pyversions/patternmem-rag.svg)](https://pypi.org/project/patternmem-rag/)
+[![PyPI version](https://img.shields.io/badge/pypi-v0.1.0-blue.svg)](https://pypi.org/project/patternmem-rag/)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://pypi.org/project/patternmem-rag/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Framework-agnostic Python middleware that wraps *any* existing RAG pipeline and makes it self-improving** — via persistent failure-pattern memory across queries.
