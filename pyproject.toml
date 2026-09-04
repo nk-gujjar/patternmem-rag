@@ -7,7 +7,7 @@ name = "patternmem-rag"
 version = "0.1.0"
 description = "Framework-agnostic RAG middleware that makes any pipeline self-improving via persistent failure-pattern memory."
 readme = "README.md"
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 authors = [{ name = "PatternMem Contributors" }]
 keywords = ["rag", "llm", "memory", "retrieval-augmented-generation", "self-improving"]
