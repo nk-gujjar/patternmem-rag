@@ -99,6 +99,8 @@ The caller **never waits** for Phases 2 or 3.
 | `pip install patternmem-rag[neo4j]` | Neo4j / AuraDB backend |
 | `pip install patternmem-rag[langfuse]` | Langfuse observability |
 | `pip install patternmem-rag[networkx]` | NetworkX in-memory backend |
+| `pip install patternmem-rag[chroma]` | ChromaDB vector backend |
+| `pip install patternmem-rag[faiss]` | FAISS local vector index backend |
 
 ---
 
@@ -126,6 +128,8 @@ PatternMemMiddleware(
 | `"json"` | Zero-config, development | File | None |
 | `"sqlite"` | Single-process production | File (WAL) | `aiosqlite` (core) |
 | `"networkx"` | Notebooks, graph experiments | Optional file | `networkx` |
+| `"chroma"` | Large stores, existing Chroma setup | File / HTTP server | `chromadb` |
+| `"faiss"` | High-speed local search, no server | File (index + sidecar) | `faiss-cpu` |
 | `"neo4j"` | Multi-process, AuraDB, scale | Native graph | `neo4j` driver |
 
 ---
