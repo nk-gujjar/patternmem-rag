@@ -71,12 +71,21 @@ def _build_backend(
     if kind == "networkx":
         from patternmem.backends.networkx_backend import NetworkXBackend
         return NetworkXBackend(similarity_threshold=similarity_threshold)
+    if kind == "chroma":
+        from patternmem.backends.chroma_backend import ChromaBackend
+        return ChromaBackend(similarity_threshold=similarity_threshold)
+    if kind == "faiss":
+        from patternmem.backends.faiss_backend import FAISSBackend
+        return FAISSBackend(similarity_threshold=similarity_threshold)
     if kind == "neo4j":
         raise ValueError(
             "Neo4jBackend requires additional configuration (uri, auth). "
             "Instantiate it directly and pass a MemoryBackend instance instead."
         )
-    raise ValueError(f"Unknown backend: {kind!r}. Choose from: json, sqlite, networkx, neo4j.")
+    raise ValueError(
+        f"Unknown backend: {kind!r}. "
+        "Choose from: json, sqlite, networkx, chroma, faiss, neo4j."
+    )
 
 
 def _extract_chunks(pipeline_output: Any) -> list[str]:
@@ -139,7 +148,7 @@ class PatternMemMiddleware:
         self,
         pipeline: Callable[..., Any],
         llm: Optional[Any] = None,
-        backend: "Literal['neo4j', 'sqlite', 'json', 'networkx'] | MemoryBackend" = "json",
+        backend: "Literal['neo4j', 'sqlite', 'json', 'networkx', 'chroma', 'faiss'] | MemoryBackend" = "json",
         eval: Literal["ragas", "deepeval", "auto", "none"] = "auto",
         observability: Optional[Literal["langfuse", "otel"]] = None,
         similarity_threshold: float = 0.82,

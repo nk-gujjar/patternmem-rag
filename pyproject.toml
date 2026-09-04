@@ -9,7 +9,7 @@ description = "Framework-agnostic RAG middleware that makes any pipeline self-im
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-authors = [{ name = "PatternMem Contributors" }]
+authors = [{ name = "Nitesh Kumar", email = "nk-gujjar@users.noreply.github.com" }]
 keywords = ["rag", "llm", "memory", "retrieval-augmented-generation", "self-improving"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -34,6 +34,8 @@ neo4j    = ["neo4j>=5.0"]
 langfuse = ["langfuse>=2.0"]
 langchain = ["langchain>=0.1"]
 networkx = ["networkx>=3.0"]
+chroma    = ["chromadb>=0.4"]
+faiss     = ["faiss-cpu>=1.7"]
 # Celery: documented stub — community contribution; not built in core
 celery   = ["celery>=5.3"]
 dev = [
@@ -45,7 +47,7 @@ dev = [
     "types-aiofiles",
 ]
 all = [
-    "patternmem-rag[ragas,deepeval,neo4j,langfuse,langchain,networkx]",
+    "patternmem-rag[ragas,deepeval,neo4j,langfuse,langchain,networkx,chroma,faiss]",
 ]
 
 [project.urls]

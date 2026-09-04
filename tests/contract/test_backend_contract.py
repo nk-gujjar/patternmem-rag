@@ -28,6 +28,8 @@ import pytest_asyncio
 from patternmem.backends.json_backend import JSONBackend
 from patternmem.backends.networkx_backend import NetworkXBackend
 from patternmem.backends.sqlite_backend import SQLiteBackend
+from patternmem.backends.chroma_backend import ChromaBackend
+from patternmem.backends.faiss_backend import FAISSBackend
 from patternmem.types import FailurePattern, FailureType
 
 # ---------------------------------------------------------------------------
@@ -82,13 +84,40 @@ async def sqlite_backend(tmp_path: Path) -> AsyncGenerator[SQLiteBackend, None]:
     yield SQLiteBackend(path=tmp_path / "patterns.db", similarity_threshold=0.82)
 
 
+@pytest_asyncio.fixture
+async def chroma_backend() -> AsyncGenerator[ChromaBackend, None]:
+    pytest.importorskip("chromadb")
+    # Ephemeral (in-memory) client — no files, no server needed for tests
+    yield ChromaBackend(
+        collection_name="test_patternmem",
+        persist_directory=None,
+        similarity_threshold=0.82,
+    )
+
+
+@pytest_asyncio.fixture
+async def faiss_backend(tmp_path: Path) -> AsyncGenerator[FAISSBackend, None]:
+    pytest.importorskip("faiss")
+    yield FAISSBackend(
+        directory=tmp_path,
+        name="test_patterns",
+        similarity_threshold=0.82,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Parametrise over all backend fixtures
 # ---------------------------------------------------------------------------
 
 
 @pytest.fixture(
-    params=["json_backend", "networkx_backend", "sqlite_backend"],
+    params=[
+        "json_backend",
+        "networkx_backend",
+        "sqlite_backend",
+        "chroma_backend",
+        "faiss_backend",
+    ],
 )
 def backend(request: pytest.FixtureRequest):  # type: ignore[return]
     return request.getfixturevalue(request.param)
