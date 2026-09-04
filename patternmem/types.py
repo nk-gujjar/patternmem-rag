@@ -17,7 +17,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum, auto
-from typing import List
+
 
 
 # ---------------------------------------------------------------------------
@@ -193,7 +193,7 @@ class FailurePattern:
     """
 
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    query_embedding: List[float] = field(default_factory=list)
+    query_embedding: list[float] = field(default_factory=list)
     failure_type: FailureType = FailureType.UNKNOWN
     root_cause: str = ""
     hint_text: str = ""

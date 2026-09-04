@@ -1,6 +1,11 @@
 # PatternMem RAG
 
-> Framework-agnostic Python middleware that wraps *any* existing RAG pipeline and makes it **self-improving** — via persistent failure-pattern memory across queries.
+[![CI](https://github.com/nk-gujjar/patternmem-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/nk-gujjar/patternmem-rag/actions)
+[![PyPI version](https://img.shields.io/badge/pypi-v0.1.0-blue.svg)](https://pypi.org/project/patternmem-rag/)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://pypi.org/project/patternmem-rag/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+> **Framework-agnostic Python middleware that wraps *any* existing RAG pipeline and makes it self-improving** — via persistent failure-pattern memory across queries.
 
 ```python
 # Before
@@ -10,9 +15,11 @@ answer = my_rag_pipeline(query)
 answer = await PatternMemMiddleware(pipeline=my_rag_pipeline).ainvoke(query)
 ```
 
+---
+
 ## Why PatternMem?
 
-Self-RAG, CRAG, and DSPy all reflect *within a single query*. PatternMem is the missing layer: it makes failure signals **persistent across the query history** — so the second time a pipeline fails on a similar question, it already knows what went wrong and pre-empts the failure.
+Self-RAG, CRAG, and DSPy all reflect *within a single query*. PatternMem is the missing layer: it makes failure signals **persistent across the entire query history** — so the second time a pipeline fails on a similar question, it already knows what went wrong and pre-empts the failure.
 
 PatternMem **does not reimplement** evaluation, LLM calling, or graph storage. It sits between your pipeline and the eval/storage libraries you already have.
 
@@ -92,6 +99,8 @@ The caller **never waits** for Phases 2 or 3.
 | `pip install patternmem-rag[neo4j]` | Neo4j / AuraDB backend |
 | `pip install patternmem-rag[langfuse]` | Langfuse observability |
 | `pip install patternmem-rag[networkx]` | NetworkX in-memory backend |
+| `pip install patternmem-rag[chroma]` | ChromaDB vector backend |
+| `pip install patternmem-rag[faiss]` | FAISS local vector index backend |
 
 ---
 
@@ -119,6 +128,8 @@ PatternMemMiddleware(
 | `"json"` | Zero-config, development | File | None |
 | `"sqlite"` | Single-process production | File (WAL) | `aiosqlite` (core) |
 | `"networkx"` | Notebooks, graph experiments | Optional file | `networkx` |
+| `"chroma"` | Large stores, existing Chroma setup | File / HTTP server | `chromadb` |
+| `"faiss"` | High-speed local search, no server | File (index + sidecar) | `faiss-cpu` |
 | `"neo4j"` | Multi-process, AuraDB, scale | Native graph | `neo4j` driver |
 
 ---
@@ -158,6 +169,15 @@ Only Phase 3 (root cause extraction and hint generation from a `FailureSignal`).
 
 **Q: What's out of scope?**
 Celery integration (documented stub), Redis/Postgres backends (open ABC for community), any dashboard (use Langfuse's native UI).
+
+---
+
+## Contributing
+
+Contributions are welcome! Please open an issue first to discuss what you'd like to change.
+
+- All backends must pass the contract test suite in `tests/contract/test_backend_contract.py`.
+- Keep public API surface stable — anything not in `patternmem.__init__.__all__` is internal.
 
 ---
 

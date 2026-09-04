@@ -1,1 +1,0 @@
-"""patternmem.backends — internal package."""

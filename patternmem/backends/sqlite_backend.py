@@ -25,6 +25,7 @@ import json
 import numpy as np
 import aiosqlite
 
+from patternmem._utils import cosine_similarity as _cosine_similarity
 from patternmem.backend import MemoryBackend
 from patternmem.types import FailurePattern, FailureType
 
@@ -43,15 +44,6 @@ CREATE TABLE IF NOT EXISTS failure_patterns (
 )
 """
 
-
-def _cosine_similarity(a: list[float], b: list[float]) -> float:
-    va = np.array(a, dtype=np.float32)
-    vb = np.array(b, dtype=np.float32)
-    norm_a = float(np.linalg.norm(va))
-    norm_b = float(np.linalg.norm(vb))
-    if norm_a == 0.0 or norm_b == 0.0:
-        return 0.0
-    return float(np.dot(va, vb) / (norm_a * norm_b))
 
 
 def _row_to_pattern(row: aiosqlite.Row) -> FailurePattern:
