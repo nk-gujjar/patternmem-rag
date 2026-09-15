@@ -190,6 +190,66 @@ class TestPhase1Augmentation:
         )
         assert "use broader query terms" in received_kwargs["retrieval_hint"]
 
+    async def test_eval_none_does_not_write_or_extract_pattern(
+        self, tmp_path: Path
+    ) -> None:
+        backend = JSONBackend(path=tmp_path / "mw_none.json", similarity_threshold=0.50)
+        llm = MagicMock()
+
+        with patch("patternmem.middleware.SentenceTransformer") as MockST:
+            mock_encoder = MagicMock()
+            mock_encoder.encode.return_value = np.array(_unit_vec(11), dtype=np.float32)
+            MockST.return_value = mock_encoder
+
+            async with PatternMemMiddleware(
+                pipeline=_sync_pipeline,
+                backend=backend,
+                eval="none",
+                llm=llm,
+            ) as mw:
+                await mw.ainvoke("disabled evaluation")
+                await asyncio.sleep(0.05)
+
+        assert (await backend.get_stats())["count"] == 0
+        llm.assert_not_called()
+
+    async def test_successful_unknown_signal_reinforces_matched_pattern(
+        self, tmp_path: Path
+    ) -> None:
+        backend = JSONBackend(path=tmp_path / "mw_success.json", similarity_threshold=0.50)
+        emb = _unit_vec(12)
+        pattern = FailurePattern(
+            query_embedding=emb,
+            failure_type=FailureType.RETRIEVAL_MISS,
+            hint_text="broaden query",
+            score=0.1,
+        )
+        await backend.write_pattern(pattern)
+
+        with patch("patternmem.middleware.SentenceTransformer") as MockST:
+            mock_encoder = MagicMock()
+            mock_encoder.encode.return_value = np.array(emb, dtype=np.float32)
+            MockST.return_value = mock_encoder
+
+            async with PatternMemMiddleware(
+                pipeline=lambda query, **kwargs: {
+                    "answer": "ok",
+                    "chunks": ["relevant"],
+                    "reflect": 0.9,
+                },
+                backend=backend,
+                eval="auto",
+                llm=MagicMock(),
+            ) as mw:
+                await mw.ainvoke("successful hinted query")
+                await asyncio.sleep(0.05)
+
+        patterns = await backend.lookup_patterns(emb, top_k=3)
+        assert len(patterns) == 1
+        assert patterns[0].id == pattern.id
+        assert patterns[0].failure_type == FailureType.RETRIEVAL_MISS
+        assert patterns[0].decay_weight == pytest.approx(1.1)
+
 
 class TestAsyncContextManager:
     async def test_context_manager_starts_and_stops_reflector(
