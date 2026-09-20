@@ -49,7 +49,7 @@ from patternmem.eval_router import EvalRouter
 from patternmem.observability import ObservabilityEmitter
 from patternmem.reflector import BackgroundReflector
 from patternmem.resolver import LLMResolver
-from patternmem.types import FailurePattern, FailureSignal
+from patternmem.types import FailurePattern, FailureSignal, FailureType
 
 logger = logging.getLogger(__name__)
 
@@ -317,6 +317,9 @@ class PatternMemMiddleware:
                 )
 
                 for signal in signals:
+                    if signal.failure_type is FailureType.UNKNOWN and signal.score == 0.0:
+                        continue
+
                     # Match signal to an existing pattern by failure_type
                     matched = next(
                         (
@@ -326,6 +329,8 @@ class PatternMemMiddleware:
                         ),
                         None,
                     )
+                    if matched is None and signal.failure_type is FailureType.UNKNOWN:
+                        matched = matched_patterns[0] if matched_patterns else None
                     # matched=None → new pattern will be written in Phase 3
                     self._reflector.enqueue(
                         signal=signal,
